@@ -1,0 +1,16 @@
+# 忽略虚拟环境
+venv/
+myenv/
+
+# 忽略缓存文件
+__pycache__/
+*.pyc
+
+# 忽略训练输出的模型权重和检查点
+bert_finetuned_results/
+my_best_bert_classifier/
+runs/
+
+# 忽略系统文件
+.DS_Store
+.idea/
