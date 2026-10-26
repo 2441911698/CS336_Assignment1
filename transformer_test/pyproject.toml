@@ -1,0 +1,20 @@
+[project]
+name = "transformer-test"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "李毅天", email = "2441911698@qq.com" }
+]
+requires-python = ">=3.9"
+dependencies = [
+    "torch>=2.8.0",
+    "transformers>=4.57.6",
+]
+
+[project.scripts]
+transformer-test = "transformer_test:main"
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14.0"]
+build-backend = "uv_build"
