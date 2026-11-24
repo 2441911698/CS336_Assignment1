@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+import math
 import os
 from collections.abc import Iterable
 from typing import IO, Any, BinaryIO
@@ -468,6 +468,8 @@ def get_adamw_cls() -> Any:
     """
     Returns a torch.optim.Optimizer that implements AdamW.
     """
+    from cs336_basics.optim.adamw import AdamW
+    return AdamW
     raise NotImplementedError
 
 
@@ -496,7 +498,23 @@ def run_get_lr_cosine_schedule(
     Returns:
         Learning rate at the given iteration under the specified schedule.
     """
-    raise NotImplementedError
+    """
+        计算带有线性预热（Linear Warmup）的余弦退火学习率
+        """
+    # 1. 预热阶段 (Linear Warmup)：从 0 线性爬升到最大学习率
+    if it < warmup_iters:
+        return max_learning_rate * (it / warmup_iters)
+
+    # 2. 保底阶段 (Minimum Phase)：一旦超过了设定的衰减周期，就一直保持最低车速
+    if it >= cosine_cycle_iters:
+        return min_learning_rate
+
+    # 3. 余弦衰减阶段 (Cosine Decay)：利用 math.cos 算出一个从 1 平滑降到 0 的系数
+    decay_ratio = (it - warmup_iters) / (cosine_cycle_iters - warmup_iters)
+    coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio))
+
+    # 用系数在最大和最小学习率之间进行插值
+    return min_learning_rate + coeff * (max_learning_rate - min_learning_rate)
 
 
 def run_save_checkpoint(
